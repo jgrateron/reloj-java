@@ -18,7 +18,7 @@ public class App extends JFrame {
 
 	public void init() {
 		setTitle("Java Reloj");
-		setSize(650, 650);
+		setSize(1280, 768);
 		setLocationRelativeTo(null);
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
