@@ -2,6 +2,7 @@ package com.fresco.component;
 
 import java.awt.BasicStroke;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
@@ -37,6 +38,7 @@ public class PanelReloj extends JComponent {
 	private int offsetY;
 	private ClassLoader classLoader = ClassLoader.getSystemClassLoader();
 	private int capture;
+	private int fps = FPS;
 
 	record Point(int x, int y) {
 	};
@@ -57,20 +59,24 @@ public class PanelReloj extends JComponent {
 		g2 = image.createGraphics();
 		g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+		g2.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		var thread = new Thread(() -> {
 			while (start) {
 				long startTime = System.nanoTime();
 				drawBackGround();
 				drawReloj();
+				g2.drawString("fps= " + fps, 50, 50);
 				render();
 				long endTime = System.nanoTime();
 				long time = endTime - startTime;
 				if (time < TARGET_TIME) {
+					fps = FPS;
 					long sleep = (TARGET_TIME - time) / 1_000_000;
-					// System.out.println(sleep);
 					sleep(sleep);
 				}
-				//capture();
+				else {
+					fps = (int) (1_000_000_000 / time);
+				}
 			}
 		});
 		thread.start();
